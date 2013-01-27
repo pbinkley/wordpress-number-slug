@@ -8,6 +8,10 @@ Author: Peter Binkley
 Author URI: http://www.wallandbinkley.com/quaedam
 License: GPL2
 */
+
+add_filter('wp_insert_post_data', 'number_slug', 10);
+
+
 // based on http://stackoverflow.com/questions/4518527/customize-the-auto-generation-of-post-slug-in-wordpress#answer-4518634
 function number_slug($data) {
   	global $post_ID;
@@ -19,9 +23,12 @@ function number_slug($data) {
 		else
 		   $data['post_name'] = sanitize_title($data['post_title'], $post_ID);
 	}
+	else {
+		$titlewords = explode("-", $data['post_name']);
+		if (is_numeric($titlewords[0]))
+			$data['post_name'] = $titlewords[0];
+	}
 
 	return $data;
 }
-
-add_filter('wp_insert_post_data', 'number_slug', 10);
 ?>
